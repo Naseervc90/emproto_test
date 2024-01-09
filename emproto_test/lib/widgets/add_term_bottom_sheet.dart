@@ -1,6 +1,7 @@
 // widgets/add_term_bottom_sheet.dart
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 
@@ -15,15 +16,21 @@ class _AddTermBottomSheetState extends State<AddTermBottomSheet> {
   bool isListening = false;
 
   void _startListening() async {
-    if (!isListening) {
-      await _speech.listen(
-        onResult: (result) {
-          setState(() {
-            _textController.text = result.recognizedWords;
-          });
-        },
-        listenFor: Duration(seconds: 10),
-      );
+    if (await _speech.initialize()) {
+      var status = await Permission.microphone.request();
+      if (status == PermissionStatus.granted) {
+        _speech.listen(
+          onResult: (result) {
+            setState(() {
+              _textController.text = result.recognizedWords;
+            });
+          },
+          listenFor: const Duration(seconds: 10),
+        );
+      }
+      else{
+        const Text('Please grant the permission');
+      }
     }
   }
 
@@ -35,8 +42,7 @@ class _AddTermBottomSheetState extends State<AddTermBottomSheet> {
 
   void _translateAndAdd() async {
     final result = await TranslateLanguage.values;
-    // Add your logic to save the translated text to the list
-    // ...
+
 
     Navigator.pop(context); // Close the bottom sheet
   }
