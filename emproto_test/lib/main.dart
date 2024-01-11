@@ -28,15 +28,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Terms and Conditions'),
+          title: const Text('Terms and Conditions'),
         ),
-        body: TermsList(),
+        body: const TermsList(),
       ),
     );
   }
 }
 
 class PostApp extends StatelessWidget {
+  const PostApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
